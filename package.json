@@ -1,0 +1,30 @@
+{
+  "name": "restart-be",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "dev": "nodemon server.js",
+    "start": "NODE_ENV=production node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tonixhaker/restartBE.git"
+  },
+  "keywords": [
+    "express",
+    "mongoose"
+  ],
+  "author": "tonixhaker",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tonixhaker/restartBE/issues"
+  },
+  "homepage": "https://github.com/tonixhaker/restartBE#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "nodemon": "^1.19.1"
+  }
+}
