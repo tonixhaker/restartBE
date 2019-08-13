@@ -1,7 +1,7 @@
 const express = require('express');
+const mongoose = require('./config/database');
+const { EXPRESS_PORT } = require('./config/app');
 const app = express();
-const port = 3000;
 
 app.get('/', (req, res) => res.send('Hello World!'));
-
-app.listen(port, () => console.log(`Example app listening on port ${port}!`));
+app.listen(EXPRESS_PORT, () => console.log(`Ready on port ${EXPRESS_PORT}!`));
