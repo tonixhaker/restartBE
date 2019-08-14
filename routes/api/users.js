@@ -4,15 +4,19 @@ const router = require('express').Router();
 const auth = require('../../config/auth');
 const Users = mongoose.model('Users');
 
-router.post('/register', auth.optional, (req, res, next) => {
-    const { body: { user } } = req;
+router.post('/register', auth.optional, async(req, res, next) => {
+    try {
+        const {body: {user}} = req;
 
-    const finalUser = new Users(user);
+        const finalUser = new Users(user);
 
-    finalUser.setPassword(user.password);
+        finalUser.setPassword(user.password);
 
-    return finalUser.save()
-        .then(() => res.json({ user: finalUser.toAuthJSON() }));
+        await finalUser.save();
+        res.json({user: finalUser.toAuthJSON()});
+    } catch (e) {
+        res.status(500).send(e);
+    }
 });
 
 router.post('/login', auth.optional, (req, res, next) => {
