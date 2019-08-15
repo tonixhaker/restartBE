@@ -3,8 +3,15 @@ const passport = require('passport');
 const router = require('express').Router();
 const auth = require('../../config/auth');
 const Users = mongoose.model('Users');
+const Joi = require('@hapi/joi');
+const validator = require('express-joi-validation').createValidator();
 
-router.post('/register', auth.optional, async(req, res, next) => {
+const registerSchema = Joi.object({user:{
+        email: Joi.string().email({minDomainSegments: 2}).required(),
+        password: Joi.string().regex(/^[a-zA-Z0-9]{3,30}$/).required()
+    }
+});
+router.post('/register', [auth.optional,validator.body(registerSchema)], async(req, res, next) => {
     try {
         const {body: {user}} = req;
 
