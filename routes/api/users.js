@@ -17,7 +17,7 @@ router.post('/register', [auth.optional,validator.body(registerSchema)], async(r
         const existUser = await Users.findOne({email:user.email});
 
         if (existUser) {
-            return res.status(409).send('User already exist');
+            return res.status(409).send({message:'User already exist'});
         }
 
         const finalUser = new Users(user);
