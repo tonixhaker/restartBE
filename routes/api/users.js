@@ -8,26 +8,36 @@ const validator = require('express-joi-validation').createValidator();
 
 const registerSchema = Joi.object({user:{
         email: Joi.string().email({minDomainSegments: 2}).required(),
-        password: Joi.string().regex(/^[a-zA-Z0-9]{3,30}$/).required()
+        password: Joi.string().regex(/^[a-zA-Z0-9]{6,30}$/).required()
     }
 });
 router.post('/register', [auth.optional,validator.body(registerSchema)], async(req, res, next) => {
     try {
         const {body: {user}} = req;
+        const existUser = await Users.findOne({email:user.email});
+
+        if (existUser) {
+            return res.status(409).send('User already exist');
+        }
 
         const finalUser = new Users(user);
 
         finalUser.setPassword(user.password);
 
         await finalUser.save();
-        res.json({user: finalUser.toAuthJSON()});
+        return res.json({user: finalUser.toAuthJSON()});
 
     } catch (e) {
-        res.status(500).send(e);
+        return res.status(500).send(e);
     }
 });
 
-router.post('/login', auth.optional, (req, res, next) => {
+const loginSchema = Joi.object({user:{
+        email: Joi.string().email({minDomainSegments: 2}).required(),
+        password: Joi.string().required()
+    }
+});
+router.post('/login', [auth.optional,validator.body(loginSchema)], (req, res, next) => {
     try {
 
         return passport.authenticate('local', { session: false }, (err, passportUser, info) => {
@@ -41,7 +51,7 @@ router.post('/login', auth.optional, (req, res, next) => {
 
                 return res.json({ user: user.toAuthJSON() });
             }
-            return status(400).info;
+            return res.status(400).send('Wrong credentials');
         })(req, res, next);
 
     } catch (e) {

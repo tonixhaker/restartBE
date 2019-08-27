@@ -7,9 +7,9 @@ const { Schema } = mongoose;
 const UsersSchema = new Schema({
     email: {
         type: String,
-        required: [true, 'Why no bacon?'],
+        required: true,
         unique: true,
-        dropDups: true
+        dropDups: true,
     },
     hash: String,
     salt: String,
